@@ -21,6 +21,7 @@ base_url = 'https://cafe.naver.com/ArticleList.nhn?search.clubid=29179343&search
 print("page 번호 입력")
 page = input()
 
+
 driver.get(base_url + "&search.page=" + page)
 driver.switch_to.frame('cafe_main')
 
@@ -35,33 +36,24 @@ for article in article_urls:
     
     title = soup.select('div.tit-box span.b')[0].get_text()
     tbody = soup.find('div',{'id':'tbody'})
-    img= tbody.find_all('img')    
+    img = tbody.find_all('img')    
     
-for i in enumerate(img):
-    print(i)
-    t = urlopen(i[1].attrs['src']).read()
+    for i in enumerate(img[1:]):
+        index = str(i[0])
+        downloadPath = "C:/Users/JSPARK/Downloads/"
+        filepath = downloadPath + title
+        t = urlopen(i[1].attrs['src']).read()
 
-    current_path = os.path
+        if not(os.path.exists(downloadPath + title)):
+            os.makedirs(filepath)
 
-    if 
-    filepath = os.makedirs(os.path.join(title))
+        filename = filepath + "/" + index + '.jpg'
 
-    filename = filepath + "/" + str(i[0]) + '.jpg'
-
-    with open(filename,"wb") as f:
-        f.write(t)
+        if not(os.path.exists(filename)):
+            with open(filename,"wb") as f:
+                f.write(t)
+        else:
+            print("pass")
+            break
 
     print("Image Save Success")
-    
-# for i in enumerate(img):
-#     print(i[1].)
-    # t = urlopen(i[1]).read
-
-    # filepath = os.makedirs(os.path.join(title))
-
-    # filename = filepath + "/" + str(i[0]+1) + '.jpg'
-
-    # with open(filename,"wb") as f:
-    #     f.write(t)
-
-    # print("Image Save Success")
