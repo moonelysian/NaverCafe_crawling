@@ -35,20 +35,27 @@ for article in article_urls:
     soup = bs(driver.page_source, 'html.parser')
     
     title = soup.select('div.tit-box span.b')[0].get_text()
-    tbody = soup.find('div',{'id':'tbody'})
-    img = tbody.find_all('img')    
     
-    for i in enumerate(img[1:]):
+    #원본url이 써있는 script 가져옴
+    photoAlbum = soup.find_all('script',{'filename':'externalFile.jpg'}) 
+
+    for i in enumerate(photoAlbum):
         index = str(i[0])
+        
+        #이미지 저장위치지정
         downloadPath = "C:/Users/JSPARK/Downloads/"
         filepath = downloadPath + title
-        t = urlopen(i[1].attrs['src']).read()
-
+        
+        #원본url 읽어오기
+        t = urlopen(i[1].attrs['fileurl']).read() 
+        
+        #폴더 없으면 생성
         if not(os.path.exists(downloadPath + title)):
             os.makedirs(filepath)
 
         filename = filepath + "/" + index + '.jpg'
 
+        #해당 파일이 있으면 저장하지 않고 없으면 저장
         if not(os.path.exists(filename)):
             with open(filename,"wb") as f:
                 f.write(t)
