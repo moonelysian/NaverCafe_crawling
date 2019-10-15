@@ -1,4 +1,5 @@
 from selenium import webdriver
+import chromedriver_binary
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
 import pandas as pd
@@ -11,12 +12,8 @@ import re
 
 class KakaoCrawling:
     def kakao_crawling(url, downloadpath):
-        if getattr(sys, 'frozen', False):
-            chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
-            driver = webdriver.Chrome(chromedriver_path)
-            
-        else:
-            driver = webdriver.Chrome()
+        
+        driver = webdriver.Chrome()
 
         driver.get('https://accounts.kakao.com/login/kakaostory')
         
@@ -65,5 +62,6 @@ class KakaoCrawling:
                 print("Image Save Success")
 
         print("Done!")
+        driver.quit()
        
         return True

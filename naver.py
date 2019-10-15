@@ -1,4 +1,5 @@
 from selenium import webdriver
+import chromedriver_binary
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
 import pandas as pd
@@ -9,18 +10,13 @@ import sys
 class NaverCrawling:
     def naver_crawling(page, downloadPath):
 
-        if getattr(sys, 'frozen', False):
-            chromedriver_path = os.path.join(sys._MEIPASS, "chromedriver.exe")
-            driver = webdriver.Chrome(chromedriver_path)
-            
-        else:
-            driver = webdriver.Chrome()
+        driver = webdriver.Chrome()
 
         # driver = webdriver.Chrome('chromedriver')
         driver.get('https://nid.naver.com/nidlogin.login')
 
-        user_id = ""
-        user_pw = ""
+        user_id = ''
+        user_pw = ''
 
         driver.execute_script("document.getElementsByName('id')[0].value=\'" + user_id + "\'")
         driver.execute_script("document.getElementsByName('pw')[0].value=\'" + user_pw + "\'")
@@ -78,7 +74,9 @@ class NaverCrawling:
             if downloadEnd :
                 print("done!!")
                 break
-    
+            
+        driver.quit()
+
         return True
         
 
