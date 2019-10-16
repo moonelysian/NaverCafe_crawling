@@ -12,7 +12,6 @@ import re
 
 class KakaoCrawling:
     def kakao_crawling(url, downloadpath):
-        
         driver = webdriver.Chrome()
 
         driver.get('https://accounts.kakao.com/login/kakaostory')

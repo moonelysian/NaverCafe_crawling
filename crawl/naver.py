@@ -15,12 +15,8 @@ class NaverCrawling:
         # driver = webdriver.Chrome('chromedriver')
         driver.get('https://nid.naver.com/nidlogin.login')
 
-<<<<<<< HEAD
-        user_id = ''
-        user_pw = ''
-=======
-    
->>>>>>> a7d4b6c905ee95a0531faa69f07a46ffd5cd725a
+        user_id = ""
+        user_pw = ""
 
         driver.execute_script("document.getElementsByName('id')[0].value=\'" + user_id + "\'")
         driver.execute_script("document.getElementsByName('pw')[0].value=\'" + user_pw + "\'")

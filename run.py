@@ -3,13 +3,19 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5 import uic
 
-from naver import NaverCrawling as nc
-from kakao import KakaoCrawling as kc
+# from selenium import webdriver
+import chromedriver_binary
 
-form_class = uic.loadUiType("crawling.ui")[0]
+sys.path.insert(0, "./crawl")
+
+from crawl.naver import NaverCrawling as nc
+from crawl.kakao import KakaoCrawling as kc
+
+form_class = uic.loadUiType("./ui/crawling.ui")[0]
 
 
 class WindowClass(QMainWindow, form_class) :
+
     def __init__(self) :
         super().__init__()
 
