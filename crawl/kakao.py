@@ -12,6 +12,7 @@ import re
 
 class KakaoCrawling:
     def kakao_crawling(url, downloadpath):
+        
         driver = webdriver.Chrome()
 
         driver.get('https://accounts.kakao.com/login/kakaostory')
@@ -25,24 +26,29 @@ class KakaoCrawling:
 
         time.sleep(2)
 
-        splitUrl = url.rsplit('/',2)
-        storeURL = splitUrl[0]
+        # print(url.split('photo')[0])
+        # splitUrl = url.rsplit('/',2)
+        # storeURL = splitUrl[0]
 
         driver.get(url)
 
-        soup = bs(driver.page_source, 'html.parser')
+        soup = bs(driver.page_source, 'html.parser' , from_encoding='utf-8')
         script = str(soup.find_all('script')[1]).split('\n')
 
+        #sripte 태그 + 불필요한 부분 제거 + 제이슨 형식으로 변경
         test = script[1].replace("boot.parseInitialData(",'')
         test = test.replace( ");" , '')
-
         data = json.loads(test)
-        
-        img_urls = []
 
+        #image 원본 url 저장할 배열
+        img_urls = [] 
+        
+
+        #원본 url 저장
         for img in data['activity']['media']:
             img_urls.append( img['origin_url'] )
 
+        #이미지 다운로드
         for index in range(len(img_urls)):
             
             #원본url 읽어오기
@@ -59,6 +65,22 @@ class KakaoCrawling:
                 with open(filename,"wb") as f:
                     f.write(t)
                 print("Image Save Success")
+
+        #제품 올린 날짜
+        createdDate = data['activity']['created_at'].split('T')
+        date = "제품 업로드 날짜: " + str(createdDate[0]) + "\n"
+        
+        #제품설명 가져오기
+        info = data['activity']['content']
+        textfile = downloadpath + "/" + "info" + ".txt"
+
+        #제품설명txt파일 쓰기
+        f = open(textfile, "w" , -1, "utf-8")
+        f.write(date)
+        for i in info: 
+            f.write(i)
+        
+        f.close()
 
         print("Done!")
         driver.quit()

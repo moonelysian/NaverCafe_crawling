@@ -6,18 +6,18 @@ import pandas as pd
 import time
 import os
 import sys
+import re
 
 class NaverCrawling:
     def naver_crawling(page, downloadPath):
 
         driver = webdriver.Chrome()
 
-        # driver = webdriver.Chrome('chromedriver')
         driver.get('https://nid.naver.com/nidlogin.login')
 
-        user_id = ""
-        user_pw = ""
-
+        user_id = ''
+        user_pw = ''
+        
         driver.execute_script("document.getElementsByName('id')[0].value=\'" + user_id + "\'")
         driver.execute_script("document.getElementsByName('pw')[0].value=\'" + user_pw + "\'")
         driver.find_element_by_xpath('//*[@id="frmNIDLogin"]/fieldset/input').click()
@@ -38,29 +38,38 @@ class NaverCrawling:
             driver.get(article)
             driver.switch_to.frame('cafe_main')
             soup = bs(driver.page_source, 'html.parser')
-            
+
+            #제품설명
             title = soup.select('div.tit-box span.b')[0].get_text()
+            createDate = soup.select('div.tit-box td.date')[0].get_text() + "\n\n"
+            context = str(soup.select('div.tbody p')[0]).replace('<br/>','\n')
+            context = createDate + str(re.sub('<.+?>', '', context, 0).strip())
             
             #원본url이 써있는 script 가져옴
             photoAlbum = soup.find_all('script',{'filename':'externalFile.jpg'}) 
 
+            filepath = downloadPath + title
+            textfile = filepath + "/" + "info" + ".txt"
+
+            #제품설명txt
+            if not(os.path.exists(filepath)):
+                os.makedirs(filepath)
+                f = open(textfile, "w" , -1, "utf-8")
+                for i in context:
+                    f.write(i)
+
+            
+
             for i in enumerate(photoAlbum):
                 index = str(i[0])
                 downloadEnd = False
-                #이미지 저장위치지정
-                # downloadPath = "C:/Users/JSPARK/Downloads/"
-                filepath = downloadPath + title
                 
                 #원본url 읽어오기
                 t = urlopen(i[1].attrs['fileurl']).read() 
-                
-                #폴더 없으면 생성
-                if not(os.path.exists(downloadPath + title)):
-                    os.makedirs(filepath)
 
                 filename = filepath + "/" + index + '.jpg'
 
-                #해당 파일이 있으면 저장하지 않고 없으면
+                #해당 파일이 없으면 저장
                 if not(os.path.exists(filename)):
                     with open(filename,"wb") as f:
                         f.write(t)

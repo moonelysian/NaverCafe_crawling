@@ -19,6 +19,7 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
 
+        # path = "C:\\Users\\Seoyoung\\Downloads\\"
         path = "C:\\Users\\JSPARK\\Downloads\\"
 
         self.setupUi(self)
@@ -35,10 +36,9 @@ class WindowClass(QMainWindow, form_class) :
 
     def startCrawling(self) :
 
-        self.statusBar.showMessage('WORKING')
-
         page = self.pagenum.text()
         url = self.url.text()
+        self.statusBar.showMessage('WORKING')
 
         downloadpath_naver = self.download_naver.text()
         downloadpath_kakao = self.download_kakao.text()
@@ -51,10 +51,13 @@ class WindowClass(QMainWindow, form_class) :
             if(kc.kakao_crawling(url, downloadpath_kakao)):
                 self.statusBar.showMessage('DONE')
     
-    def clean(self, path):
-        path = "C:\\Users\\JSPARK\\Downloads\\"
+    def clean(self):
+        # path = "C:\\Users\\Seoyoung\\Downloads\\"
 
+        path = "C:\\Users\\JSPARK\\Downloads\\"
+        
         self.pagenum.clear()
+        self.url.clear()
 
         self.download_naver.clear()
         self.download_naver.setText(path)
@@ -62,6 +65,7 @@ class WindowClass(QMainWindow, form_class) :
         self.download_kakao.clear()
         self.download_kakao.setText(path)
 
+        self.statusBar.showMessage('READY')
 
 
 if __name__ == "__main__" :

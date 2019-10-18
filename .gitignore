@@ -2,3 +2,7 @@ build/
 실행파일/
 __pycache__/
 crawl/__pycache__/
+*.zip
+*.log
+*.exe
+dist/
