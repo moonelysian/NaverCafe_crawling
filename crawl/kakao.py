@@ -14,7 +14,6 @@ class KakaoCrawling:
     def kakao_crawling(url, downloadpath):
         
         driver = webdriver.Chrome()
-
         driver.get('https://accounts.kakao.com/login/kakaostory')
         
         user_id = ''
@@ -27,7 +26,6 @@ class KakaoCrawling:
         time.sleep(2)
 
         driver.get(url)
-
         soup = bs(driver.page_source, 'html.parser')
         script = str(soup.find_all('script')[1]).split('\n')
 
@@ -35,36 +33,56 @@ class KakaoCrawling:
         test = script[1].replace("boot.parseInitialData(",'')
         test = test.replace( ");" , '')
 
-        textfile = downloadpath + "/" + "info" + ".txt"
+        #image 원본 url 저장할 배열
+        img_urls = []
+        
+        #content 저장할 주소
+        #폴더 없으면 생성
+        if not(os.path.exists(downloadpath)):
+            os.makedirs(downloadpath)
+        textfile = downloadpath + "\\" + "info" + ".txt"
 
         try:
             data = json.loads(test)
-            createdDate = data['activity']['created_at'].split('T')
-            date = "제품 업로드 날짜: " + str(createdDate[0]) + "\n"
+            getCreatedDate = data['activity']['created_at'].split('T')
+            date = str(getCreatedDate[0]) + "\n"
         
             #제품 정보
             info = data['activity']['content']
             images = data['activity']['media']
+            
+            #text작성
+            f = open(textfile, "w" , -1, "utf-8")
+            f.write(date)
+            for i in info:
+                f.write(i)
 
         except:
+
+            #제품정보
             r = re.compile('"content":(.*?),"require')
             m = r.search(test)
-            
             if m:
-                context = m.group(1)
- 
-            
+                content = m.group(1)
+                info = content.split('\\n')
+
+            #image url
             i = re.compile('"media":(.*?),"content"')
-            j = i.search(test)
-            
+            j = i.search(test)     
             if j:
                 images = json.loads(j.group(1))
-                
 
-
-        #image 원본 url 저장할 배열
-        img_urls = [] 
-        
+            #제품 등록 날짜
+            a = re.compile('"created_at":"(.*?),"with_tag_count"')
+            b = a.search(test)
+            if b:
+                date = str(b.group(1)).split('T')[0] + '\n'
+            
+            #text 파일 만들기
+            f = open(textfile, "w" , -1, "utf-8")
+            f.write(date)
+            for i in info:
+                f.write(i+'\n')
 
         #원본 url 저장
         for img in images:
@@ -75,10 +93,6 @@ class KakaoCrawling:
             
             #원본url 읽어오기
             t = urlopen(img_urls[index]).read() 
-            
-            #폴더 없으면 생성
-            if not(os.path.exists(downloadpath)):
-                os.makedirs(downloadpath)
 
             filename = downloadpath + "/" + str(index) + '.jpg'
 
@@ -87,20 +101,6 @@ class KakaoCrawling:
                 with open(filename,"wb") as f:
                     f.write(t)
                 print("Image Save Success")
-
-        #제품 올린 날짜
-        # createdDate = data['activity']['created_at'].split('T')
-        # date = "제품 업로드 날짜: " + str(createdDate[0]) + "\n"
-        
-        # #제품설명 가져오기
-        # info = data['activity']['content']
-        # textfile = downloadpath + "/" + "info" + ".txt"
-
-        #제품설명txt파일 쓰기
-        f = open(textfile, "w" , -1, "utf-8")
-        f.write(date)
-        for i in info: 
-            f.write(i)
         
         f.close()
 
