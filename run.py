@@ -19,9 +19,9 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
 
-        # path = "C:\\Users\\Seoyoung\\Downloads\\"
         path = "C:\\Users\\JSPARK\\Downloads\\"
-
+        #path = "C:\\Users\\Seoyoung\\Downloads\\"
+        
         self.setupUi(self)
         self.download_naver.setText(path)
         self.download_kakao.setText(path)
@@ -52,10 +52,9 @@ class WindowClass(QMainWindow, form_class) :
                 self.statusBar.showMessage('DONE')
     
     def clean(self):
-        # path = "C:\\Users\\Seoyoung\\Downloads\\"
-
         path = "C:\\Users\\JSPARK\\Downloads\\"
-        
+        #path = "C:\\Users\\Seoyoung\\Downloads\\"
+
         self.pagenum.clear()
         self.url.clear()
 

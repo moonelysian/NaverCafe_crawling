@@ -26,26 +26,48 @@ class KakaoCrawling:
 
         time.sleep(2)
 
-        # print(url.split('photo')[0])
-        # splitUrl = url.rsplit('/',2)
-        # storeURL = splitUrl[0]
-
         driver.get(url)
 
-        soup = bs(driver.page_source, 'html.parser' , from_encoding='utf-8')
+        soup = bs(driver.page_source, 'html.parser')
         script = str(soup.find_all('script')[1]).split('\n')
 
         #sripte 태그 + 불필요한 부분 제거 + 제이슨 형식으로 변경
         test = script[1].replace("boot.parseInitialData(",'')
         test = test.replace( ");" , '')
-        data = json.loads(test)
+
+        textfile = downloadpath + "/" + "info" + ".txt"
+
+        try:
+            data = json.loads(test)
+            createdDate = data['activity']['created_at'].split('T')
+            date = "제품 업로드 날짜: " + str(createdDate[0]) + "\n"
+        
+            #제품 정보
+            info = data['activity']['content']
+            images = data['activity']['media']
+
+        except:
+            r = re.compile('"content":(.*?),"require')
+            m = r.search(test)
+            
+            if m:
+                context = m.group(1)
+ 
+            
+            i = re.compile('"media":(.*?),"content"')
+            j = i.search(test)
+            
+            if j:
+                images = json.loads(j.group(1))
+                
+
 
         #image 원본 url 저장할 배열
         img_urls = [] 
         
 
         #원본 url 저장
-        for img in data['activity']['media']:
+        for img in images:
             img_urls.append( img['origin_url'] )
 
         #이미지 다운로드
@@ -67,12 +89,12 @@ class KakaoCrawling:
                 print("Image Save Success")
 
         #제품 올린 날짜
-        createdDate = data['activity']['created_at'].split('T')
-        date = "제품 업로드 날짜: " + str(createdDate[0]) + "\n"
+        # createdDate = data['activity']['created_at'].split('T')
+        # date = "제품 업로드 날짜: " + str(createdDate[0]) + "\n"
         
-        #제품설명 가져오기
-        info = data['activity']['content']
-        textfile = downloadpath + "/" + "info" + ".txt"
+        # #제품설명 가져오기
+        # info = data['activity']['content']
+        # textfile = downloadpath + "/" + "info" + ".txt"
 
         #제품설명txt파일 쓰기
         f = open(textfile, "w" , -1, "utf-8")
