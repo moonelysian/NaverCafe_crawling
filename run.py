@@ -18,13 +18,8 @@ class WindowClass(QMainWindow, form_class) :
 
     def __init__(self) :
         super().__init__()
-
-        path = "C:\\Users\\JSPARK\\Downloads\\"
-        #path = "C:\\Users\\Seoyoung\\Downloads\\"
         
         self.setupUi(self)
-        self.download_naver.setText(path)
-        self.download_kakao.setText(path)
 
         self.statusBar = QStatusBar(self)
         self.setStatusBar(self.statusBar)
@@ -32,6 +27,7 @@ class WindowClass(QMainWindow, form_class) :
         
         self.btn_crawling.clicked.connect(self.startCrawling)
         self.btn_clear.clicked.connect(self.clean)
+        self.pushButton.clicked.connect(self.findPath)
         
 
     def startCrawling(self) :
@@ -52,19 +48,19 @@ class WindowClass(QMainWindow, form_class) :
                 self.statusBar.showMessage('DONE')
     
     def clean(self):
-        path = "C:\\Users\\JSPARK\\Downloads\\"
-        #path = "C:\\Users\\Seoyoung\\Downloads\\"
 
         self.pagenum.clear()
         self.url.clear()
 
         self.download_naver.clear()
-        self.download_naver.setText(path)
-        
         self.download_kakao.clear()
-        self.download_kakao.setText(path)
 
         self.statusBar.showMessage('READY')
+    
+    def findPath(self):
+        fname = QFileDialog.getExistingDirectory(self)
+        self.download_kakao.setText(fname)
+
 
 
 if __name__ == "__main__" :

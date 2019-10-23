@@ -186,12 +186,25 @@
      <rect>
       <x>20</x>
       <y>120</y>
-      <width>541</width>
+      <width>511</width>
       <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>C:\Users\Seoyoung\Downloads\</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>120</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>경로 선택</string>
     </property>
    </widget>
   </widget>
