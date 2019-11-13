@@ -8,16 +8,14 @@ import os
 import sys
 import json
 import re
-
-
 class KakaoCrawling:
     def kakao_crawling(url, downloadpath):
         
         driver = webdriver.Chrome()
         driver.get('https://accounts.kakao.com/login/kakaostory')
         
-        user_id = ''
-        user_pw = ''
+        user_id = 'tekarr@meta-soft.co.kr'
+        user_pw = 'kbg@050200'
 
         driver.find_element_by_xpath('//*[@id="id_email_2"]').send_keys(user_id)
         driver.find_element_by_xpath('//*[@id="id_password_3"]').send_keys(user_pw)

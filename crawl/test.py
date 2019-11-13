@@ -2,6 +2,9 @@ from selenium import webdriver
 import chromedriver_binary
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 import time
 import os
@@ -9,47 +12,35 @@ import sys
 import re
 
 driver = webdriver.Chrome()
-driver.get('https://sinsangmarket.kr')
+driver.get('http://www.bananany.com/Login')
 
 user_id = ''
 user_pw = ''
 
-driver.execute_script("$('#login_container').css('display', '');") 
+#로그인
+driver.find_element_by_xpath('//*[@id="user_id"]').send_keys(user_id)
+driver.find_element_by_xpath('//*[@id="user_pwd"]').send_keys(user_pw)
+driver.find_element_by_xpath('//*[@id="login_frame1"]/input[3]').click()
 
-time.sleep(0.5)
+time.sleep(3)
 
-driver.find_element_by_xpath('//*[@id="login_container"]/div[2]/div[2]/form/input[1]').send_keys(user_id)
-driver.find_element_by_xpath('//*[@id="login_container"]/div[2]/div[2]/form/input[2]').send_keys(user_pw)
-driver.find_element_by_xpath('//*[@id="login_container"]/div[2]/div[2]/form/div/button[1]').click()
+driver.find_element_by_xpath('//*[@id="hl_list4"]/li[1]/figure/a').click()
+elemente = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "body > div.jquery-modal.blocker.current"))
+    )
 
-time.sleep(1)
+test = elemente.find_element_by_id('gd_listimg').get_attribute('innerHTML')
 
-driver.get('https://sinsangmarket.kr/v3/goodsDetail?gid=31576017')
+soup = bs(test, 'html.parser')
 
-time.sleep(2)
+imgs = soup.find_all('img')
+div = soup.find_all('div')
 
-soup = bs(driver.page_source, 'html.parser')
+for d in div:
+    if(d.get_text()):
+        print(d.get_text())
 
-time.sleep(1)
+for img in imgs:
+    print(img.attrs['src'])
 
-title = soup.select('div.goods_name')[0].get_text()
-details = soup.find_all('td')
-
-content = ''
-
-for detail in details:
-    content += (detail.get_text()+'\n')
-
-# samples = soup.find_all('img', height=80)
-
-# img_urls = []
-
-# for url in samples:
-#     r = re.compile('src="(.*?)&amp')
-#     m = r.search(str(url))
-#     if m:
-#         img_urls.append(str(m.group(1))+'&h=800&w=800')
-        
-# print(img_urls)
-
-driver.quit()
+    

@@ -2,10 +2,8 @@ from selenium import webdriver
 import chromedriver_binary
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen
-import pandas as pd
 import time
 import os
-import sys
 import re
 
 class NaverCrawling:
@@ -57,8 +55,6 @@ class NaverCrawling:
                 f = open(textfile, "w" , -1, "utf-8")
                 for i in context:
                     f.write(i)
-
-            
 
             for i in enumerate(photoAlbum):
                 index = str(i[0])
