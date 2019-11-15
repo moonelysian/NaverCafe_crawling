@@ -22,25 +22,47 @@ driver.find_element_by_xpath('//*[@id="user_id"]').send_keys(user_id)
 driver.find_element_by_xpath('//*[@id="user_pwd"]').send_keys(user_pw)
 driver.find_element_by_xpath('//*[@id="login_frame1"]/input[3]').click()
 
-time.sleep(3)
-
-driver.find_element_by_xpath('//*[@id="hl_list4"]/li[1]/figure/a').click()
 elemente = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "body > div.jquery-modal.blocker.current"))
     )
 
-test = elemente.find_element_by_id('gd_listimg').get_attribute('innerHTML')
+imgList = elemente.find_element_by_id('gd_listimg').get_attribute('innerHTML')
+section = elemente.find_elements_by_xpath('//*[@id="pro_pop"]/ul/li[2]/section')
 
-soup = bs(test, 'html.parser')
+for x in section:
+    context = bs(x.get_attribute('innerHTML'), 'html.parser')
 
-imgs = soup.find_all('img')
-div = soup.find_all('div')
+titleList = context.select('#pro_name')
+proInfoList = context.select('#pro_info')
 
-for d in div:
-    if(d.get_text()):
-        print(d.get_text())
+for title in titleList:
+    print(title.get_text())
 
-for img in imgs:
-    print(img.attrs['src'])
+infoLi = []
+
+for pro_info in proInfoList:
+    infoLi = pro_info.select('li')
+
+details = []
+
+for li in infoLi:
+    details.append(li.get_text())
+
+detail = "\n".join(details)
+print(detail)
+
+
+
+# soup = bs(imgList, 'html.parser')
+
+# imgs = soup.find_all('img')
+# divs = soup.find_all('div')
+
+# for div in divs:
+#     if(div.get_text()):
+#         print(div.get_text())
+
+# for img in imgs:
+#     print(img.attrs['src'])
 
     
