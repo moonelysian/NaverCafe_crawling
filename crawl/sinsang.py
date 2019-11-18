@@ -11,8 +11,8 @@ import re
 driver = webdriver.Chrome()
 driver.get('https://sinsangmarket.kr')
 
-user_id = 'syyang'
-user_pw = '600630'
+user_id = ''
+user_pw = ''
 
 driver.execute_script("$('#login_container').css('display', '');") 
 
