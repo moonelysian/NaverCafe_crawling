@@ -21,7 +21,8 @@ a = Analysis(['run.py'],
                  "os",
                  "sys",
                  "json",
-                 "re"
+                 "re",
+                 "selenium.webdriver"
              ],
              hookspath=[],
              runtime_hooks=[],
