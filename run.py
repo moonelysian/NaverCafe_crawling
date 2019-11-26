@@ -19,8 +19,9 @@ class WindowClass(QMainWindow, form_class) :
     def __init__(self) :
         super().__init__()
 
-        path = "C:\\Users\\JSPARK\\Downloads\\"
-        # path = "C:\\Users\\Seoyoung\\Downloads\\"
+        # path = "C:\\Users\\JSPARK\\Downloads\\"
+        path = "C:\\Users\\Seoyoung\\Downloads\\"
+        #path = "D:\\이연주"
 
         self.setupUi(self)
 
@@ -56,9 +57,10 @@ class WindowClass(QMainWindow, form_class) :
     
     def clean(self):
 
-        path = "C:\\Users\\JSPARK\\Downloads\\"
-        #path = "C:\\Users\\Seoyoung\\Downloads\\"
-
+        #path = "C:\\Users\\JSPARK\\Downloads\\"
+        path = "C:\\Users\\Seoyoung\\Downloads\\"
+        # path = "D:\\이연주"
+        
         self.pagenum.clear()
         self.url.clear()
 

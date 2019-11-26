@@ -6,3 +6,4 @@ crawl/__pycache__/
 *.log
 *.exe
 dist/
+.vscode
