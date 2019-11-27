@@ -12,6 +12,7 @@ a = Analysis(['run.py'],
              hiddenimports=[
                  "crawl.naver",
                  "crawl.kakao",
+                 "crawl.test"
                  "selenium",
                  "chromedriver_binary",
                  "bs4",
