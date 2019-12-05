@@ -10,7 +10,7 @@ import os
 import sys
 
 class WebCrawling:        
-    def web_crawling(url):
+    def web_crawling(url, path, storeName):
         
         def getInfo():
             details = []
@@ -78,13 +78,13 @@ class WebCrawling:
 
             detail = "\n".join(details)
 
-            #다운로드 경로
-            download_path  = "C:\\Users\\JSPARK\\Downloads\\" + title + "\\"
-            #제품정보 저장할 파일
-            info_file = download_path + "\\" + "info" + ".txt"
+            dirName = path + storeName + '-' + title + "\\"
 
-            if not(os.path.exists(download_path)):
-                        os.makedirs(download_path)
+            #제품정보 저장할 파일
+            info_file = dirName + "\\" + "info" + ".txt"
+
+            if not(os.path.exists(dirName)):
+                        os.makedirs(dirName)
 
             f = open(info_file, "w" , -1, "utf-8")
             for d in detail:
@@ -93,7 +93,7 @@ class WebCrawling:
             for key, value in enumerate(imgs):
                 img_url = urlopen(value.attrs['src']).read()
                 
-                filename = download_path + str(key) + '.jpg'
+                filename = dirName + str(key) + '.jpg'
 
                 #해당 파일이 있으면 저장하지 않고 없으면 저장
                 if not(os.path.exists(filename)):
@@ -102,7 +102,7 @@ class WebCrawling:
                     print("Image Save Success")
         
         driver = webdriver.Chrome()
-        driver.get(url+'Login')
+        driver.get(url + 'Login')
 
         if(url=='http://www.j-factory.co.kr/'):
             user_id = ''

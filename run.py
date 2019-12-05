@@ -79,64 +79,67 @@ class WindowClass(QMainWindow, form_class) :
         self.thehaemil.clicked.connect(lambda state, button=self.thehaemil : self.pageCrawling(state, button))
     
     def pageCrawling(self, state, button):
+        # path = "C:\\Users\\Seoyoung\\Downloads\\"
+        path = "C:\\Users\\JSPARK\\Downloads\\"
+
         buttonName = button.text()
         print(buttonName)
         if buttonName == '가우디':
-            wc.web_crawling('http://www.gaudistyle.co.kr/')
+            wc.web_crawling('http://www.gaudistyle.co.kr/', path, buttonName)
         
         elif buttonName == '닥스':
-            wc.web_crawling('http://www.dks08.co.kr/')
+            wc.web_crawling('http://www.dks08.co.kr/', path, buttonName)
         
         elif buttonName == '두림':
-            wc.web_crawling('http://www.thedoorim.com/')
+            wc.web_crawling('http://www.thedoorim.com/', path, buttonName)
         
         elif buttonName == '디스티':
-            wc.web_crawling('http://www.thist.co.kr/')
+            wc.web_crawling('http://www.thist.co.kr/', path, buttonName)
 
         elif buttonName == '라임':
-            wc.web_crawling('http://www.terrior.co.kr/')
+            wc.web_crawling('http://www.terrior.co.kr/', path, buttonName)
 
         elif buttonName == '문':
-            wc.web_crawling('http://www.bymun.co.kr/')
+            wc.web_crawling('http://www.bymun.co.kr/', path, buttonName)
         
         elif buttonName == '메이원':
-            wc.web_crawling('http://www.mayone.co.kr/')
+            wc.web_crawling('http://www.mayone.co.kr/', path, buttonName)
         
         elif buttonName == '바나나뉴욕':
-            wc.web_crawling('http://www.bananany.com/')
+            wc.web_crawling('http://www.bananany.com/', path, buttonName)
         
         elif buttonName == '브라운소울':
-            wc.web_crawling('http://www.brownsoul.co.kr/')
+            wc.web_crawling('http://www.brownsoul.co.kr/', path, buttonName)
         
         elif buttonName == '블리':
-            wc.web_crawling('http://www.bleestyle.com/')
+            wc.web_crawling('http://www.bleestyle.com/', path, buttonName)
         
         elif buttonName == '베라':
-            wc.web_crawling('http://www.thevera.co.kr/')
+            wc.web_crawling('http://www.thevera.co.kr/', path, buttonName)
         
         elif buttonName == '베이비슈':
-            wc.web_crawling('http://www.babyshu.co.kr/')
+            wc.web_crawling('http://www.babyshu.co.kr/', path, buttonName)
         
         elif buttonName == '반하나':
-            wc.web_crawling('http://www.ban-hana.co.kr/')
+            wc.web_crawling('http://www.ban-hana.co.kr/', path, buttonName)
         
         elif buttonName == '시우팀팀':
-            wc.web_crawling('http://www.siutimtim.com/ ')
+            wc.web_crawling('http://www.siutimtim.com/', path, buttonName)
         
         elif buttonName == '언더커버':
-            wc.web_crawling('http://byundercover.com/')
+            wc.web_crawling('http://byundercover.com/', path, buttonName)
         
         elif buttonName == '엠버':
-            wc.web_crawling('http://byamber.co.kr/')
+            wc.web_crawling('http://byamber.co.kr/', path, buttonName)
         
         elif buttonName == '제이팩토리':
-            wc.web_crawling('http://www.j-factory.co.kr/')
+            wc.web_crawling('http://www.j-factory.co.kr/', path, buttonName)
         
         elif buttonName == '뚜뚜':
-            wc.web_crawling('http://www.dduddu.co.kr/')
+            wc.web_crawling('http://www.dduddu.co.kr/', path, buttonName)
         
         elif buttonName == '해밀':
-            wc.web_crawling('http://www.thehaemil.co.kr/')
+            wc.web_crawling('http://www.thehaemil.co.kr/', path, buttonName)
 
     def startCrawling(self) :
 
