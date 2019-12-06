@@ -50,6 +50,20 @@ class MyTabWidget(QWidget):
             self.buttonName.clicked.connect((lambda state, url=value, shop=key : self.pageCrawling(state, url, shop)))
         self.tab1.setLayout(self.tab1.layout)
 
+        self.tab2.layout = QVBoxLayout(self)
+        
+        groupbox1 = QGroupBox("카카오")
+        vbox = QVBoxLayout()
+        groupbox1.setLayout(vbox)
+
+        radiobutton = QRadioButton("RadioButton 1")
+        vbox.addWidget(radiobutton)
+
+        self.groupbox2 = QGroupBox("미엘")
+        self.tab2.layout.addWidget(groupbox1)
+        self.tab2.layout.addWidget(self.groupbox2)
+        self.tab2.setLayout(self.tab2.layout)
+
         # Add tabs to widget
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
