@@ -1,192 +1,177 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5 import uic
-
-# from selenium import webdriver
-import chromedriver_binary
-
-sys.path.insert(0, "./crawl")
-
-from crawl.naver import NaverCrawling as nc
+from PyQt5.QtCore import pyqtSlot
+from crawl.shop import WebCrawling as wc
 from crawl.kakao import KakaoCrawling as kc
-from crawl.test import WebCrawling as wc
+from crawl.sinsang import SinsangCrwaling as sc
+from crawl.naver import NaverCrawling as nc
 
-form_class = uic.loadUiType("./ui/crawling.ui")[0]
-
-class WindowClass(QMainWindow, form_class) :
-    
-    def __init__(self) :
+class App(QMainWindow):
+    def __init__(self):
         super().__init__()
+        self.setGeometry(100, 100, 500, 600)
 
-        path = "C:\\Users\\JSPARK\\Downloads\\"
+        self.tab_widget = MyTabWidget(self)
+        self.setCentralWidget(self.tab_widget)
+
+        self.show()
+class MyTabWidget(QWidget):
+    def __init__(self, parent):
+        super(QWidget, self).__init__(parent)
+        self.layout = QVBoxLayout()
+        path = "C:\\Users\\metasoft\\Downloads"
         # path = "C:\\Users\\Seoyoung\\Downloads\\"
         # path = "D:\\이연주"
 
-        self.setupUi(self)
+        f = open("./shops.txt", 'r',  encoding='UTF8')
+        data = f.read().split('\n')
+        f.close()
 
-        self.download_naver.setText(path)
-        self.download_kakao.setText(path)
+        shopes = {}
 
-        self.statusBar = QStatusBar(self)
-        self.setStatusBar(self.statusBar)
-        self.statusBar.showMessage('READY')
+        for i in range(len(data)):
+            if i%2 == 0:
+                shopes[data[i]] = data[i+1]
         
-        #tab1 - 카스 네이버
-        self.btn_crawling.clicked.connect(self.startCrawling)
-        self.btn_clear.clicked.connect(self.clean)
-        self.pushButton.clicked.connect(self.findPath_kakao)
-        self.pushButton_2.clicked.connect(self.findPath_naver)
+        # Initialize tab screen
+        self.tabs = QTabWidget()
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        self.tabs.resize(500, 200)
 
-        #tab2 - 개별 웹페이지
-        #가우디
-        self.gaudistyle.clicked.connect(lambda state, button=self.gaudistyle : self.pageCrawling(state, button))
-        #닥스
-        self.dks08.clicked.connect(lambda state, button=self.dks08 : self.pageCrawling(state, button))
-        #두림
-        self.thedoorim.clicked.connect(lambda state, button=self.thedoorim : self.pageCrawling(state, button))
-        #디스티
-        self.thist.clicked.connect(lambda state, button=self.thist : self.pageCrawling(state, button))
-        # 라임
-        self.terrior.clicked.connect(lambda state, button=self.terrior : self.pageCrawling(state, button))
-        # 문
-        self.bymun.clicked.connect(lambda state, button=self.bymun : self.pageCrawling(state, button))
-        # 메이원
-        self.mayone.clicked.connect(lambda state, button=self.mayone : self.pageCrawling(state, button))
-        # 바나나뉴욕
-        self.bananany.clicked.connect(lambda state, button=self.bananany : self.pageCrawling(state, button))
-        # 브라운소울
-        self.brownsoul.clicked.connect(lambda state, button=self.brownsoul : self.pageCrawling(state, button))
-        # 블리
-        self.bleestyle.clicked.connect(lambda state, button=self.bleestyle : self.pageCrawling(state, button))
-        # 베라
-        self.thevera.clicked.connect(lambda state, button=self.thevera : self.pageCrawling(state, button))
-        # 베이비슈
-        self.thist.clicked.connect(lambda state, button=self.babyshu : self.pageCrawling(state, button))
-        # 반하나
-        self.babyshu.clicked.connect(lambda state, button=self.banhana : self.pageCrawling(state, button))
-        # 시우팀팀
-        self.siutimtim.clicked.connect(lambda state, button=self.siutimtim : self.pageCrawling(state, button))
-        # 언더커버
-        self.byundercover.clicked.connect(lambda state, button=self.byundercover : self.pageCrawling(state, button))
-        # 엠버
-        self.byamber.clicked.connect(lambda state, button=self.byamber : self.pageCrawling(state, button))
-        # 제이팩토리
-        self.jfactory.clicked.connect(lambda state, button=self.jfactory : self.pageCrawling(state, button))
-        # 뚜뚜
-        self.dduddu.clicked.connect(lambda state, button=self.dduddu : self.pageCrawling(state, button))
-        # 해밀
-        self.thehaemil.clicked.connect(lambda state, button=self.thehaemil : self.pageCrawling(state, button))
+        # Add tabs
+        self.tabs.addTab(self.tab1, "Tab 1")
+        self.tabs.addTab(self.tab2, "Tab 2")
+
+        # Create first tab
+        self.tab1.layout = QVBoxLayout(self)
+        
+        for index, (key, value) in enumerate(shopes.items()):
+            buttonName = 'button' + str(index)
+            self.buttonName = QPushButton(key)
+            self.tab1.layout.addWidget(self.buttonName)
+            self.buttonName.clicked.connect((lambda state, url=value, shop=key : self.pageCrawling(state, url, shop)))
+        self.tab1.setLayout(self.tab1.layout)
+
+        #Create second tab
+        self.tab2.layout = QVBoxLayout(self)
+        
+        #카카오
+        self.groupbox1 = QGroupBox("카카오")
+        self.gbox = QGridLayout()
+        
+        self.groupbox1.setLayout(self.gbox)
+
+        self.l1 = QLabel()
+        self.l1.setText('url')
+        self.kakaoUrl = QLineEdit()
+        self.gbox.addWidget(self.l1, 0, 0)
+        self.gbox.addWidget(self.kakaoUrl, 0, 1)
+
+        self.l2 = QLabel()
+        self.l2.setText('다운로드 경로')
+        self.kakaoPath = QLineEdit()
+        self.kakaoPath.setText(path)
+
+        self.fileButton = QPushButton('File')
+       
+        self.gbox.addWidget(self.l2, 1, 0)
+        self.gbox.addWidget(self.kakaoPath, 1, 1)
+        self.gbox.addWidget(self.fileButton, 1, 3)
+       
+        self.kakaoButton = QPushButton('Crawl')
+        self.gbox.addWidget(self.kakaoButton, 2,3)
+
+        # 신상마켓
+        self.groupbox2 = QGroupBox("신상마켓")
+        self.gbox = QGridLayout()
+        
+        self.groupbox2.setLayout(self.gbox)
+
+        self.l3 = QLabel()
+        self.l3.setText('url')
+        self.sinsangUrl = QLineEdit()
+        self.gbox.addWidget(self.l3, 0, 0)
+        self.gbox.addWidget(self.sinsangUrl, 0, 1)
     
-    def pageCrawling(self, state, button):
+        self.sinsangButton = QPushButton('Crawl')
+        self.gbox.addWidget(self.sinsangButton, 0,2)
+
+        # 네이버 블로그
+        self.groupbox4 = QGroupBox("모니카")
+        self.gbox = QGridLayout()
+        
+        self.groupbox4.setLayout(self.gbox)
+
+        self.l4 = QLabel()
+        self.l4.setText('url')
+        self.blogUrl = QLineEdit()
+        self.gbox.addWidget(self.l4, 0, 0)
+        self.gbox.addWidget(self.blogUrl, 0, 1)
+
+        self.l5 = QLabel()
+        self.l5.setText('다운로드 경로')
+        self.blogPath = QLineEdit()
+        self.blogPath.setText(path)
+
+        self.fileButton = QPushButton('File')
+       
+        self.gbox.addWidget(self.l5, 1, 0)
+        self.gbox.addWidget(self.blogPath, 1, 1)
+        self.gbox.addWidget(self.fileButton, 1, 3)
+
+        self.blogButton = QPushButton('Crawl')
+        self.gbox.addWidget(self.blogButton, 2,3)
+        
+        #tab2 layout set
+        self.tab2.layout.addWidget(self.groupbox1)
+        self.tab2.layout.addWidget(self.groupbox2)
+        self.tab2.layout.addWidget(self.groupbox3)
+        self.tab2.layout.addWidget(self.groupbox4)
+        self.tab2.setLayout(self.tab2.layout)
+
+        
+        # Add tabs to widget
+        self.layout.addWidget(self.tabs)
+        self.setLayout(self.layout)
+
+        # 버튼 click function 연결
+        self.fileButton.clicked.connect(self.findPath_kakao)
+        self.kakaoButton.clicked.connect(self.kakaoCrawling)
+        self.sinsangButton.clicked.connect(self.sinsangCrawling)
+        self.blogButton.clicked.connect(self.blogCrawling)
+
+    @pyqtSlot()
+    def pageCrawling(self, state, url, shop):
         # path = "C:\\Users\\Seoyoung\\Downloads\\"
-        path = "C:\\Users\\JSPARK\\Downloads\\"
-
-        buttonName = button.text()
-        print(buttonName)
-        if buttonName == '가우디':
-            wc.web_crawling('http://www.gaudistyle.co.kr/', path, buttonName)
-        
-        elif buttonName == '닥스':
-            wc.web_crawling('http://www.dks08.co.kr/', path, buttonName)
-        
-        elif buttonName == '두림':
-            wc.web_crawling('http://www.thedoorim.com/', path, buttonName)
-        
-        elif buttonName == '디스티':
-            wc.web_crawling('http://www.thist.co.kr/', path, buttonName)
-
-        elif buttonName == '라임':
-            wc.web_crawling('http://www.terrior.co.kr/', path, buttonName)
-
-        elif buttonName == '문':
-            wc.web_crawling('http://www.bymun.co.kr/', path, buttonName)
-        
-        elif buttonName == '메이원':
-            wc.web_crawling('http://www.mayone.co.kr/', path, buttonName)
-        
-        elif buttonName == '바나나뉴욕':
-            wc.web_crawling('http://www.bananany.com/', path, buttonName)
-        
-        elif buttonName == '브라운소울':
-            wc.web_crawling('http://www.brownsoul.co.kr/', path, buttonName)
-        
-        elif buttonName == '블리':
-            wc.web_crawling('http://www.bleestyle.com/', path, buttonName)
-        
-        elif buttonName == '베라':
-            wc.web_crawling('http://www.thevera.co.kr/', path, buttonName)
-        
-        elif buttonName == '베이비슈':
-            wc.web_crawling('http://www.babyshu.co.kr/', path, buttonName)
-        
-        elif buttonName == '반하나':
-            wc.web_crawling('http://www.ban-hana.co.kr/', path, buttonName)
-        
-        elif buttonName == '시우팀팀':
-            wc.web_crawling('http://www.siutimtim.com/', path, buttonName)
-        
-        elif buttonName == '언더커버':
-            wc.web_crawling('http://byundercover.com/', path, buttonName)
-        
-        elif buttonName == '엠버':
-            wc.web_crawling('http://byamber.co.kr/', path, buttonName)
-        
-        elif buttonName == '제이팩토리':
-            wc.web_crawling('http://www.j-factory.co.kr/', path, buttonName)
-        
-        elif buttonName == '뚜뚜':
-            wc.web_crawling('http://www.dduddu.co.kr/', path, buttonName)
-        
-        elif buttonName == '해밀':
-            wc.web_crawling('http://www.thehaemil.co.kr/', path, buttonName)
-
-    def startCrawling(self) :
-
-        page = self.pagenum.text()
-        url = self.url.text()
-        self.statusBar.showMessage('WORKING')
-
-        downloadpath_naver = self.download_naver.text()
-        downloadpath_kakao = self.download_kakao.text()
-
-        if page != '':
-            if(nc.naver_crawling(page, downloadpath_naver)):
-                self.statusBar.showMessage('DONE')
-
-        if url != '':
-            if(kc.kakao_crawling(url, downloadpath_kakao)):
-                self.statusBar.showMessage('DONE')
-    
-    def clean(self):
-
-        path = "C:\\Users\\JSPARK\\Downloads\\"
-        # path = "C:\\Users\\Seoyoung\\Downloads\\"
+        path = "C:\\Users\\metasoft\\Downloads"
         # path = "D:\\이연주"
-        
-        self.pagenum.clear()
-        self.url.clear()
+        wc.web_crawling(str(url), path, shop)
 
-        self.download_naver.clear()
-        self.download_kakao.clear()
-
-        self.download_naver.setText(path)
-        self.download_kakao.setText(path)
-
-        self.statusBar.showMessage('READY')
-    
     def findPath_kakao(self):
         fname = QFileDialog.getExistingDirectory(self)
-        self.download_kakao.setText(fname)
+        self.kakaoPath.setText(fname)
 
-    def findPath_naver(self):
-        fname = QFileDialog.getExistingDirectory(self)
-        self.download_naver.setText(fname)
+    def kakaoCrawling(self):
+        url = self.kakaoUrl.text()
+        downloadpath_kakao = self.kakaoPath.text()
+        kc.kakao_crawling(url, downloadpath_kakao)
+
+    def sinsangCrawling(self):
+        # path = "C:\\Users\\Seoyoung\\Downloads\\"
+        path = "C:\\Users\\metasoft\\Downloads"
+        # path = "D:\\이연주"
+        url = self.sinsangUrl.text()
+        sc.singsang_crawling(url, path)
+
+    def blogCrawling(self):
+        url = self.blogUrl.text()
+        download_blog = self.blogPath.text()
+        nc.naver_blog(url, download_blog)
 
 
-
-if __name__ == "__main__" :
-    app = QApplication(sys.argv) 
-    myWindow = WindowClass() 
-    myWindow.show()
-    app.exec_()
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())
