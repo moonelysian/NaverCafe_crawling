@@ -2,17 +2,14 @@
 
 block_cipher = None
 
-
 a = Analysis(['run.py'],
              pathex=['C:\\Users\\JSPARK\\Desktop\\myj\\crawling'],
              binaries=[],
-             datas=[
-                    ('./ui/*.ui','./ui'),
-                ],
+             datas=[],
              hiddenimports=[
                  "crawl.naver",
                  "crawl.kakao",
-                 "crawl.test"
+                 "crawl.shop"
                  "selenium",
                  "chromedriver_binary",
                  "bs4",

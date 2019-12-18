@@ -79,11 +79,35 @@ class NaverCrawling:
             if downloadEnd :
                 print("done!!")
                 break
-            
         driver.quit()
 
         return True
+
+    def naver_blog(posturl, download_path):
+        driver = webdriver.Chrome()
+        driver.get(posturl)
+
+        driver.switch_to.frame('mainFrame')
+        soup = bs(driver.page_source, 'html.parser')
+
+        details = soup.select('div.se-module')
+
+        if not(os.path.exists(download_path)):
+            os.makedirs(download_path)
+
+        imgs = soup.select('img.se-image-resource')
+
+        for index, url in enumerate(imgs):
+            filename = download_path + "/" + str(index) + ".jpg"
+            original = url.attrs['src'].split('?')[0].replace('postfiles','blogfiles')
+            
+            if not(os.path.exists(filename)):
+                with open(filename, 'wb') as f:
+                    f.write(urlopen(original).read())
+                print('success')
         
+        driver.quit()
+
 
 
     
