@@ -7,7 +7,7 @@ import os
 import re
 
 class NaverCrawling:
-    def naver_crawling(page, downloadPath):
+    def naver_cafe(page, downloadPath):
 
         driver = webdriver.Chrome()
 

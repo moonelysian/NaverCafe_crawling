@@ -22,7 +22,7 @@ class MyTabWidget(QWidget):
         super(QWidget, self).__init__(parent)
         self.layout = QVBoxLayout()
         dt = str(datetime.today()).split(' ')[0]
-        path = "..\\" + dt
+        path = "..\\" + dt + '\\'
         # path = "C:\\Users\\Seoyoung\\Downloads\\"
         # path = "D:\\이연주"
 
@@ -43,8 +43,8 @@ class MyTabWidget(QWidget):
         self.tabs.resize(500, 200)
 
         # Add tabs
-        self.tabs.addTab(self.tab1, "Tab 1")
-        self.tabs.addTab(self.tab2, "Tab 2")
+        self.tabs.addTab(self.tab1, "거래처")
+        self.tabs.addTab(self.tab2, "기타")
 
         # Create first tab
         self.tab1.layout = QVBoxLayout(self)
@@ -76,11 +76,11 @@ class MyTabWidget(QWidget):
         self.kakaoPath = QLineEdit()
         self.kakaoPath.setText(path)
 
-        self.fileButton = QPushButton('File')
+        self.fileButton1 = QPushButton('File')
        
         self.gbox.addWidget(self.l2, 1, 0)
         self.gbox.addWidget(self.kakaoPath, 1, 1)
-        self.gbox.addWidget(self.fileButton, 1, 3)
+        self.gbox.addWidget(self.fileButton1, 1, 3)
        
         self.kakaoButton = QPushButton('Crawl')
         self.gbox.addWidget(self.kakaoButton, 2,3)
@@ -101,7 +101,7 @@ class MyTabWidget(QWidget):
         self.gbox.addWidget(self.sinsangButton, 0,2)
 
         # 네이버 블로그
-        self.groupbox4 = QGroupBox("모니카")
+        self.groupbox4 = QGroupBox("네이버 블로그")
         self.gbox = QGridLayout()
         
         self.groupbox4.setLayout(self.gbox)
@@ -117,39 +117,74 @@ class MyTabWidget(QWidget):
         self.blogPath = QLineEdit()
         self.blogPath.setText(path)
 
-        self.fileButton = QPushButton('File')
+        self.fileButton2 = QPushButton('File')
        
         self.gbox.addWidget(self.l5, 1, 0)
         self.gbox.addWidget(self.blogPath, 1, 1)
-        self.gbox.addWidget(self.fileButton, 1, 3)
+        self.gbox.addWidget(self.fileButton2, 1, 3)
 
         self.blogButton = QPushButton('Crawl')
         self.gbox.addWidget(self.blogButton, 2,3)
+
+        #네이버 카페
+        self.groupbox3 = QGroupBox("네이버 카페")
+        self.gbox = QGridLayout()
+        
+        self.groupbox3.setLayout(self.gbox)
+
+        self.l6 = QLabel()
+        self.l6.setText('page')
+        self.cafePage = QLineEdit()
+        self.gbox.addWidget(self.l6, 0, 0)
+        self.gbox.addWidget(self.cafePage, 0, 1)
+
+        self.l7 = QLabel()
+        self.l7.setText('다운로드 경로')
+        self.cafePath = QLineEdit()
+        self.cafePath.setText(path)
+
+        self.fileButton3 = QPushButton('File')
+       
+        self.gbox.addWidget(self.l7, 1, 0)
+        self.gbox.addWidget(self.cafePath, 1, 1)
+        self.gbox.addWidget(self.fileButton3, 1, 3)
+
+        self.cafeButton = QPushButton('Crawl')
+        self.gbox.addWidget(self.cafeButton, 2,3)
         
         #tab2 layout set
         self.tab2.layout.addWidget(self.groupbox1)
         self.tab2.layout.addWidget(self.groupbox2)
+        self.tab2.layout.addWidget(self.groupbox3)
         self.tab2.layout.addWidget(self.groupbox4)
         self.tab2.setLayout(self.tab2.layout)
 
-        
         # Add tabs to widget
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
 
         # 버튼 click function 연결
-        self.fileButton.clicked.connect(self.findPath_kakao)
+        self.fileButton1.clicked.connect(( lambda state, number=1 : self.findPath(state, number)))
+        self.fileButton2.clicked.connect(( lambda state, number=2 : self.findPath(state, number)))
+        self.fileButton3.clicked.connect(( lambda state, number=3 : self.findPath(state, number)))
+        
         self.kakaoButton.clicked.connect(self.kakaoCrawling)
         self.sinsangButton.clicked.connect((lambda state, path=path : self.sinsangCrawling(state, path)))
         self.blogButton.clicked.connect(self.blogCrawling)
+        self.cafeButton.clicked.connect(self.cafeCrawling)
 
     @pyqtSlot()
     def pageCrawling(self, state, path, url, shop):
         wc.web_crawling(str(url), path, shop)
 
-    def findPath_kakao(self):
+    def findPath(self, state, number):
         fname = QFileDialog.getExistingDirectory(self)
-        self.kakaoPath.setText(fname)
+        if number == 1:
+            self.kakaoPath.setText(fname)
+        elif number == 2:
+            self.blogPath.setText(fname)
+        elif number == 3:
+            self.cafePath.setText(fname)
 
     def kakaoCrawling(self):
         url = self.kakaoUrl.text()
@@ -164,6 +199,11 @@ class MyTabWidget(QWidget):
         url = self.blogUrl.text()
         download_blog = self.blogPath.text()
         nc.naver_blog(url, download_blog)
+    
+    def cafeCrawling(self):
+        download_path = self.cafePath.text()
+        page = self.cafePage.text()
+        nc.naver_cafe(page, download_path)
 
 
 if __name__ == '__main__':
