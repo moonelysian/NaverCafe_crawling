@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import pyqtSlot
@@ -20,7 +21,8 @@ class MyTabWidget(QWidget):
     def __init__(self, parent):
         super(QWidget, self).__init__(parent)
         self.layout = QVBoxLayout()
-        path = "C:\\Users\\metasoft\\Downloads"
+        dt = str(datetime.today()).split(' ')[0]
+        path = "..\\" + dt
         # path = "C:\\Users\\Seoyoung\\Downloads\\"
         # path = "D:\\이연주"
 
@@ -51,7 +53,7 @@ class MyTabWidget(QWidget):
             buttonName = 'button' + str(index)
             self.buttonName = QPushButton(key)
             self.tab1.layout.addWidget(self.buttonName)
-            self.buttonName.clicked.connect((lambda state, url=value, shop=key : self.pageCrawling(state, url, shop)))
+            self.buttonName.clicked.connect((lambda state, path=path, url=value, shop=key : self.pageCrawling(state, path, url, shop)))
         self.tab1.setLayout(self.tab1.layout)
 
         #Create second tab
@@ -127,7 +129,6 @@ class MyTabWidget(QWidget):
         #tab2 layout set
         self.tab2.layout.addWidget(self.groupbox1)
         self.tab2.layout.addWidget(self.groupbox2)
-        self.tab2.layout.addWidget(self.groupbox3)
         self.tab2.layout.addWidget(self.groupbox4)
         self.tab2.setLayout(self.tab2.layout)
 
@@ -139,14 +140,11 @@ class MyTabWidget(QWidget):
         # 버튼 click function 연결
         self.fileButton.clicked.connect(self.findPath_kakao)
         self.kakaoButton.clicked.connect(self.kakaoCrawling)
-        self.sinsangButton.clicked.connect(self.sinsangCrawling)
+        self.sinsangButton.clicked.connect((lambda state, path=path : self.sinsangCrawling(state, path)))
         self.blogButton.clicked.connect(self.blogCrawling)
 
     @pyqtSlot()
-    def pageCrawling(self, state, url, shop):
-        # path = "C:\\Users\\Seoyoung\\Downloads\\"
-        path = "C:\\Users\\metasoft\\Downloads"
-        # path = "D:\\이연주"
+    def pageCrawling(self, state, path, url, shop):
         wc.web_crawling(str(url), path, shop)
 
     def findPath_kakao(self):
@@ -158,10 +156,7 @@ class MyTabWidget(QWidget):
         downloadpath_kakao = self.kakaoPath.text()
         kc.kakao_crawling(url, downloadpath_kakao)
 
-    def sinsangCrawling(self):
-        # path = "C:\\Users\\Seoyoung\\Downloads\\"
-        path = "C:\\Users\\metasoft\\Downloads"
-        # path = "D:\\이연주"
+    def sinsangCrawling(self, state, path):
         url = self.sinsangUrl.text()
         sc.singsang_crawling(url, path)
 

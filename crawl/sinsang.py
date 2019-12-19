@@ -13,8 +13,8 @@ class SinsangCrwaling:
         driver = webdriver.Chrome()
         driver.get('https://sinsangmarket.kr')
 
-        user_id = 'syyang'
-        user_pw = '600630'
+        user_id = ''
+        user_pw = ''
 
         driver.execute_script("$('#login_container').css('display', '');") 
         time.sleep(0.5)
@@ -55,7 +55,7 @@ class SinsangCrwaling:
         if not(os.path.exists(download_path)):
             os.makedirs(download_path)
 
-        textfile = download_path + "\\info.txt"
+        textfile = download_path + "\\" + title + ".txt"
 
         f = open(textfile, "w" , -1, "utf-8")
         

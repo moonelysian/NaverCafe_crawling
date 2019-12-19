@@ -81,7 +81,7 @@ class WebCrawling:
             dirName = path + storeName + '-' + title + "\\"
 
             #제품정보 저장할 파일
-            info_file = dirName + "\\" + "info" + ".txt"
+            info_file = dirName + "\\" + title + ".txt"
 
             if not(os.path.exists(dirName)):
                         os.makedirs(dirName)
@@ -105,12 +105,12 @@ class WebCrawling:
         driver.get(url + '/Login')
 
         if(url=='http://www.j-factory.co.kr'):
-            user_id = 'tekarr'
-            user_pw = 'kbg@0502'
+            user_id = ''
+            user_pw = ''
 
         else:
-            user_id = 'tekarr'
-            user_pw = 'kbg@050200'
+            user_id = ''
+            user_pw = ''
 
         driver.find_element_by_xpath('//*[@id="user_id"]').send_keys(user_id)
         driver.find_element_by_xpath('//*[@id="user_pwd"]').send_keys(user_pw)
@@ -136,6 +136,13 @@ class WebCrawling:
             time.sleep(2)
             getInfo()
 
+        driver.get(url+'/Mypage?m=3#/')
+
+        for num in range(1, len(goodslist)+1):
+            mygood = ul.find_element_by_xpath('//*[@id="mygoodslist"]/li['+ str(num) +']/figure/figcaption/div/ul[1]/li[2]/a')
+            driver.execute_script("arguments[0].click();", mygood)
+            print('찜하기 해제')
+            
         driver.quit()
 
 

@@ -47,7 +47,7 @@ class NaverCrawling:
             photoAlbum = soup.find_all('script',{'filename':'externalFile.jpg'}) 
 
             filepath = downloadPath + title
-            textfile = filepath + "/" + "info" + ".txt"
+            textfile = filepath + "/" + title + ".txt"
 
             #제품설명txt
             if not(os.path.exists(filepath)):
@@ -92,6 +92,15 @@ class NaverCrawling:
 
         details = soup.select('div.se-module')
 
+        title = download_path.split('\\')[-1]
+        textfile = download_path + "\\"+ title + ".txt"
+
+        if not(os.path.exists(download_path)):
+            os.makedirs(download_path)
+            f = open(textfile, "w" , -1, "utf-8")
+            for detail in details:
+                f.write(detail.get_text())
+
         if not(os.path.exists(download_path)):
             os.makedirs(download_path)
 
@@ -104,7 +113,7 @@ class NaverCrawling:
             if not(os.path.exists(filename)):
                 with open(filename, 'wb') as f:
                     f.write(urlopen(original).read())
-                print('success')
+            print('success')
         
         driver.quit()
 

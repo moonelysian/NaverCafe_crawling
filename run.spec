@@ -3,13 +3,14 @@
 block_cipher = None
 
 a = Analysis(['run.py'],
-             pathex=['C:\\Users\\JSPARK\\Desktop\\myj\\crawling'],
+             pathex=['C:\\Users\\metasoft\\Desktop\\myj\\crawling'],
              binaries=[],
              datas=[],
              hiddenimports=[
                  "crawl.naver",
                  "crawl.kakao",
-                 "crawl.shop"
+                 "crawl.shop",
+                 "crawl.sinsang",
                  "selenium",
                  "chromedriver_binary",
                  "bs4",
