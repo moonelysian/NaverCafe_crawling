@@ -2,27 +2,12 @@
 
 block_cipher = None
 
+
 a = Analysis(['run.py'],
-             pathex=['C:\\Users\\metasoft\\Desktop\\myj\\crawling'],
+             pathex=['c:\\Users\\metasoft\\Desktop\\myj\\crawling'],
              binaries=[],
              datas=[],
-             hiddenimports=[
-                 "crawl.naver",
-                 "crawl.kakao",
-                 "crawl.shop",
-                 "crawl.sinsang",
-                 "selenium",
-                 "chromedriver_binary",
-                 "bs4",
-                 "urllib.request",
-                 "pandas",
-                 "time",
-                 "os",
-                 "sys",
-                 "json",
-                 "re",
-                 "selenium.webdriver"
-             ],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -34,23 +19,19 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
           [],
+          exclude_binaries=True,
           name='run',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          upx_exclude=[],
-          runtime_tmpdir=None,
           console=True )
-
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
                strip=False,
                upx=True,
+               upx_exclude=[],
                name='run')

@@ -11,7 +11,7 @@ from crawl.naver import NaverCrawling as nc
 class App(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setGeometry(100, 100, 500, 600)
+        self.setGeometry(100, 100, 750, 600)
 
         self.tab_widget = MyTabWidget(self)
         self.setCentralWidget(self.tab_widget)
@@ -22,6 +22,7 @@ class MyTabWidget(QWidget):
         super(QWidget, self).__init__(parent)
         self.layout = QVBoxLayout()
         dt = str(datetime.today()).split(' ')[0]
+        # path = 'C:\\Users\\hkchoi\\Desktop\\쇼핑몰\\00_제품사진\\1_의류\\'
         path = "..\\" + dt + '\\'
         # path = "C:\\Users\\Seoyoung\\Downloads\\"
         # path = "D:\\이연주"
@@ -60,7 +61,7 @@ class MyTabWidget(QWidget):
         self.tab2.layout = QVBoxLayout(self)
         
         #카카오
-        self.groupbox1 = QGroupBox("카카오")
+        self.groupbox1 = QGroupBox("카카오스토리")
         self.gbox = QGridLayout()
         
         self.groupbox1.setLayout(self.gbox)
@@ -96,9 +97,20 @@ class MyTabWidget(QWidget):
         self.sinsangUrl = QLineEdit()
         self.gbox.addWidget(self.l3, 0, 0)
         self.gbox.addWidget(self.sinsangUrl, 0, 1)
-    
+
+        self.l8 = QLabel()
+        self.l8.setText('다운로드 경로')
+        self.sinsangPath = QLineEdit()
+        self.sinsangPath.setText(path)
+
+        self.fileButton4 = QPushButton('File')
+       
+        self.gbox.addWidget(self.l8, 1, 0)
+        self.gbox.addWidget(self.sinsangPath, 1, 1)
+        self.gbox.addWidget(self.fileButton4, 1, 3)
+
         self.sinsangButton = QPushButton('Crawl')
-        self.gbox.addWidget(self.sinsangButton, 0,2)
+        self.gbox.addWidget(self.sinsangButton, 2,3)
 
         # 네이버 블로그
         self.groupbox4 = QGroupBox("네이버 블로그")
@@ -167,9 +179,10 @@ class MyTabWidget(QWidget):
         self.fileButton1.clicked.connect(( lambda state, number=1 : self.findPath(state, number)))
         self.fileButton2.clicked.connect(( lambda state, number=2 : self.findPath(state, number)))
         self.fileButton3.clicked.connect(( lambda state, number=3 : self.findPath(state, number)))
+        self.fileButton4.clicked.connect(( lambda state, number=4 : self.findPath(state, number)))
         
         self.kakaoButton.clicked.connect(self.kakaoCrawling)
-        self.sinsangButton.clicked.connect((lambda state, path=path : self.sinsangCrawling(state, path)))
+        self.sinsangButton.clicked.connect(self.sinsangCrawling)
         self.blogButton.clicked.connect(self.blogCrawling)
         self.cafeButton.clicked.connect(self.cafeCrawling)
 
@@ -185,14 +198,17 @@ class MyTabWidget(QWidget):
             self.blogPath.setText(fname)
         elif number == 3:
             self.cafePath.setText(fname)
+        else:
+            self.sinsanPath.Text(fname)
 
     def kakaoCrawling(self):
         url = self.kakaoUrl.text()
         downloadpath_kakao = self.kakaoPath.text()
         kc.kakao_crawling(url, downloadpath_kakao)
 
-    def sinsangCrawling(self, state, path):
+    def sinsangCrawling(self):
         url = self.sinsangUrl.text()
+        path = self.sinsangPath.text()
         sc.singsang_crawling(url, path)
 
     def blogCrawling(self):
