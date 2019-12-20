@@ -22,7 +22,7 @@ class NaverCrawling:
 
         time.sleep(1)
 
-        base_url = 'https://cafe.naver.com/soho?iframe_url=/ArticleList.nhn%3Fsearch.clubid=10094408%26search.menuid=477%26search.boardtype=L'
+        base_url = 'https://cafe.naver.com/ArticleList.nhn?search.clubid=29179343&search.menuid=6&search.boardtype=L&search.totalCount=151'
 
 
         driver.get(base_url + "&search.page=" + page)
